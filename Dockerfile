@@ -1,16 +1,17 @@
-FROM alpine:3.20
+FROM alpine:latest
 
 RUN apk add --no-cache openssh
 
+# إنشاء مجلد ssh
 RUN mkdir -p /run/sshd
 
-# تعيين كلمة المرور
+# تعيين كلمة مرور الروت
 RUN echo "root:lookmora" | chpasswd
 
-# تفعيل تسجيل الدخول root + كلمة مرور
-RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+# تفعيل تسجيل الدخول للروت بكلمة مرور
+RUN sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd","-D","-e"]
+CMD ["/usr/sbin/sshd","-D"]
